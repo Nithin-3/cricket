@@ -4,7 +4,7 @@ import numpy
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 pose = mp_pose.Pose(min_detection_confidence=0.5,min_tracking_confidence=0.5)
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture("VID-20231017-WA0002.mp4")
 def ang(_1:list,_2:list,_3:list):
     _1,_2,_3 = numpy.array(_1), numpy.array(_2), numpy.array(_3) 
     radians = numpy.arctan2(_3[1]-_2[1], _3[0]-_2[0]) - numpy.arctan2(_1[1]-_2[1], _1[0]-_2[0])
