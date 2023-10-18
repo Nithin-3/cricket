@@ -3,7 +3,10 @@ import threading
 import time
 import mediapipe as mp
 import numpy
+import urllib
 class FPS:
+    url = 'http://192.168.137.39:8080/shot.jpg'
+
     def __init__(self):
         self.mp_drawing = mp.solutions.drawing_utils
         self.mp_pose = mp.solutions.pose
@@ -18,13 +21,14 @@ class FPS:
         self.start()
         threading.Thread(target=self.update,args=()).start()
         threading.Thread(target=self.show,args=()).start()
-
+        
     def start(self,src=0):
-        self.capt = cv2.VideoCapture(src)
+        self.capt = cv2.VideoCapture(self.url)
         self.run = True
     def update(self):
         while self.run:
-            self.frame = self.capt.read()[1]
+            # imgResp = urllib.urlopen(self.url)
+            self.frame = numpy.array(bytearray(self.capt.read()), dtype=numpy.uint8)
             self.strt = time.time()
             self.i(self.frame)
     def i(self,img):
