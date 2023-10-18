@@ -7,7 +7,7 @@ import csv
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 pose = mp_pose.Pose(min_detection_confidence=0.5,min_tracking_confidence=0.5)
-cap = cv2.VideoCapture("VID-20231017-WA0004.mp4")
+cap = cv2.VideoCapture(0)
 shot = ''
 
 def ang(_1:list,_2:list,_3:list):
@@ -21,7 +21,7 @@ def angtxt(_1,_2,_3):
     angle = int(ang(_1,_2,_3))
     cv2.putText(img, str(angle),tuple(numpy.multiply(_2, [1280, 720]).astype(int)),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1, cv2.LINE_AA)
     return angle
-img = cv2.imread("WhatsApp Image 2023-10-17 at 15.13.44.jpeg")
+img = cv2.imread("WhatsApp Image 2023-10-17 at 11.29.57.jpeg")
 RGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 results = pose.process(RGB)
 
