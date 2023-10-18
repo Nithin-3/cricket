@@ -2,13 +2,10 @@ import cv2
 import mediapipe as mp
 import numpy
 import time
-import fnd
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 pose = mp_pose.Pose(min_detection_confidence=0.5,min_tracking_confidence=0.5)
 cap = cv2.VideoCapture(0)
-shot = ''
-
 def ang(_1:list,_2:list,_3:list):
     _1,_2,_3 = numpy.array(_1), numpy.array(_2), numpy.array(_3) 
     radians = numpy.arctan2(_3[1]-_2[1], _3[0]-_2[0]) - numpy.arctan2(_1[1]-_2[1], _1[0]-_2[0])
@@ -20,7 +17,6 @@ def angtxt(image,_1,_2,_3):
     angle = int(ang(_1,_2,_3))
     cv2.putText(image, str(angle),tuple(numpy.multiply(_2, [640, 480]).astype(int)),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1, cv2.LINE_AA)
     return angle
-im = cv2.imread("WhatsApp Image 2023-10-17 at 11.29.57.jpeg")
 def i(img):
     try:
         results = pose.process(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
@@ -31,12 +27,9 @@ def i(img):
         a3=angtxt(img,(lanmak[13].x,lanmak[13].y),(lanmak[11].x,lanmak[11].y),(lanmak[23].x,lanmak[23].y))            
         a4=angtxt(img,(lanmak[14].x,lanmak[14].y),(lanmak[12].x,lanmak[12].y),(lanmak[24].x,lanmak[24].y))
         a5 = angtxt(img,(lanmak[23].x,lanmak[23].y),(lanmak[25].x,lanmak[25].y),(lanmak[27].x,lanmak[27].y))
-        # print(fnd.fnd(a4,a3,a2,a1,None))
         return img
     except:
-        return img
-# cv2.imshow("ang",i(im))
-# cv2.waitKey(0)    
+        return img   
 previousTime = 0               
 while cap.isOpened():
     _, frame = cap.read()
