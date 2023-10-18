@@ -1,9 +1,8 @@
 import cv2
 import mediapipe as mp
 import numpy
-from time import sleep
+import time
 import fnd
-import csv
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
 pose = mp_pose.Pose(min_detection_confidence=0.5,min_tracking_confidence=0.5)
@@ -17,46 +16,40 @@ def ang(_1:list,_2:list,_3:list):
     if angle >180.0:
         angle = 360-angle
     return angle 
-def angtxt(_1,_2,_3):
+def angtxt(image,_1,_2,_3):
     angle = int(ang(_1,_2,_3))
-    cv2.putText(img, str(angle),tuple(numpy.multiply(_2, [1280, 720]).astype(int)),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1, cv2.LINE_AA)
+    cv2.putText(image, str(angle),tuple(numpy.multiply(_2, [640, 480]).astype(int)),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1, cv2.LINE_AA)
     return angle
-img = cv2.imread("WhatsApp Image 2023-10-17 at 11.29.57.jpeg")
-RGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-results = pose.process(RGB)
-
-lanmak = results.pose_landmarks.landmark
-mp_drawing.draw_landmarks(
-    img, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-a1 = angtxt((lanmak[11].x,lanmak[11].y),(lanmak[13].x,lanmak[13].y),(lanmak[15].x,lanmak[15].y))            
-a2=angtxt((lanmak[12].x,lanmak[12].y),(lanmak[14].x,lanmak[14].y),(lanmak[16].x,lanmak[16].y))            
-a3=angtxt((lanmak[13].x,lanmak[13].y),(lanmak[11].x,lanmak[11].y),(lanmak[23].x,lanmak[23].y))            
-a4=angtxt((lanmak[14].x,lanmak[14].y),(lanmak[12].x,lanmak[12].y),(lanmak[24].x,lanmak[24].y))
-a5 = angtxt((lanmak[23].x,lanmak[23].y),(lanmak[25].x,lanmak[25].y),(lanmak[27].x,lanmak[27].y))
-print(fnd.fnd(a4,a3,a2,a1,None))
-cv2.imshow("ang",img)
-cv2.waitKey(0)                  
-# while cap.isOpened():
-#     _, frame = cap.read()
-#     try:
-#         RGB = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-#         results = pose.process(RGB)
-#         try:
-#             lanmak = results.pose_landmarks.landmark
-#             mp_drawing.draw_landmarks(
-#                 frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-#             a1 = angtxt((lanmak[11].x,lanmak[11].y),(lanmak[13].x,lanmak[13].y),(lanmak[15].x,lanmak[15].y))            
-#             a2=angtxt((lanmak[12].x,lanmak[12].y),(lanmak[14].x,lanmak[14].y),(lanmak[16].x,lanmak[16].y))            
-#             a3=angtxt((lanmak[13].x,lanmak[13].y),(lanmak[11].x,lanmak[11].y),(lanmak[23].x,lanmak[23].y))            
-#             a4=angtxt((lanmak[14].x,lanmak[14].y),(lanmak[12].x,lanmak[12].y),(lanmak[24].x,lanmak[24].y))
-#             a5 = angtxt((lanmak[23].x,lanmak[23].y),(lanmak[25].x,lanmak[25].y),(lanmak[27].x,lanmak[27].y))
-#             print(fnd.fnd(a4,a3,a2,a1,None))
-#         except Exception as e:
-#             pass
-#         cv2.imshow('Output', frame)
-#     except:
-#         break
-#     if cv2.waitKey(1) == ord('q'):
-#         break
-# cap.release()
-# cv2.destroyAllWindows()
+im = cv2.imread("WhatsApp Image 2023-10-17 at 11.29.57.jpeg")
+def i(img):
+    try:
+        results = pose.process(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+        lanmak = results.pose_landmarks.landmark
+        mp_drawing.draw_landmarks(img, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+        a1 = angtxt(img,(lanmak[11].x,lanmak[11].y),(lanmak[13].x,lanmak[13].y),(lanmak[15].x,lanmak[15].y))            
+        a2=angtxt(img,(lanmak[12].x,lanmak[12].y),(lanmak[14].x,lanmak[14].y),(lanmak[16].x,lanmak[16].y))            
+        a3=angtxt(img,(lanmak[13].x,lanmak[13].y),(lanmak[11].x,lanmak[11].y),(lanmak[23].x,lanmak[23].y))            
+        a4=angtxt(img,(lanmak[14].x,lanmak[14].y),(lanmak[12].x,lanmak[12].y),(lanmak[24].x,lanmak[24].y))
+        a5 = angtxt(img,(lanmak[23].x,lanmak[23].y),(lanmak[25].x,lanmak[25].y),(lanmak[27].x,lanmak[27].y))
+        # print(fnd.fnd(a4,a3,a2,a1,None))
+        return img
+    except:
+        return img
+# cv2.imshow("ang",i(im))
+# cv2.waitKey(0)    
+previousTime = 0               
+while cap.isOpened():
+    _, frame = cap.read()
+    try:
+        currentTime = time.time()
+        fps = 1 / (currentTime-previousTime)
+        previousTime = currentTime
+        image = i(frame)
+        cv2.putText(image, str(int(fps))+" FPS", (10, 70), cv2.FONT_HERSHEY_COMPLEX, 1, (0,255,0), 2)
+        cv2.imshow('Output', image)
+    except:
+        break
+    if cv2.waitKey(1) == ord('q'):
+        break
+cap.release()
+cv2.destroyAllWindows()
