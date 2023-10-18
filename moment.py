@@ -37,6 +37,7 @@ while cap.isOpened():
         currentTime = time.time()
         fps = 1 / (currentTime-previousTime)
         previousTime = currentTime
+        frame = cv2.flip(frame,1)
         image = i(frame)
         cv2.putText(image, str(int(fps))+" FPS", (10, 70), cv2.FONT_HERSHEY_COMPLEX, 1, (0,255,0), 2)
         cv2.imshow('Output', image)
